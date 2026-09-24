@@ -1,0 +1,5 @@
+*.dol
+*.elf
+build/*.d
+build/*.o
+build/*.map
