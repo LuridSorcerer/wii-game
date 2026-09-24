@@ -6,9 +6,9 @@ That'll show 'em.
 
 ## Tools
 
-I'm building this project with [devkitPro](https://devkitpro.org/wiki/Getting_Started). 
+I'm building this project with [devkitPro](https://devkitpro.org/wiki/Getting_Started) and [GRRLIB](https://github.com/GRRLIB/GRRLIB). 
 
-In particular, I've started from their application template for the Wii, which can be found in their [wii-examples repo](https://github.com/devkitPro/wii-examples).
+I've started from their application template for the Wii, which can be found in their [wii-examples repo](https://github.com/devkitPro/wii-examples).
 
 ## Plans
 
