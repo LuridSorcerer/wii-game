@@ -2,6 +2,9 @@
 #include <wiiuse/wpad.h>
 #include <grrlib.h>
 
+#include "vec2.h"
+#include "player.h"
+
 #define SOLID_RED      0xFF0000FF
 #define SOLID_GREEN    0x00FF00FF
 #define SOLID_BLUE     0x0000FFFF
@@ -14,21 +17,13 @@
 #define FRICTION 1000.0f
 #define MAXSPEED 200.0f
 
-struct vec2 {
-	float x, y;
-};
-
-struct player {
-	vec2 location, velocity;
-};
-
 //---------------------------------------------------------------------------------
 int main(int argc, char **argv) {
 //---------------------------------------------------------------------------------
 
 	// initialize variables
 
-	player p;
+	Player p;
 	p.location.x = 100.0f;
 	p.location.y = 100.0f;
 	p.velocity.x = 0.0f;
@@ -103,8 +98,7 @@ int main(int argc, char **argv) {
 
 		// move player
 
-		p.location.x += p.velocity.x * deltaTime;
-		p.location.y += p.velocity.y * deltaTime;
+		p.location += (p.velocity * deltaTime);
 		
 		// render
 		
