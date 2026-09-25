@@ -1,5 +1,6 @@
 #include <gccore.h>
 #include <wiiuse/wpad.h>
+#include <ogc/lwp_watchdog.h>
 #include <grrlib.h>
 
 #include "vec2.h"
@@ -42,7 +43,8 @@ int main(int argc, char **argv) {
 	while(SYS_MainLoop()) {
 		
 		// TODO: update delta time
-
+		SYS_Report( "Time: %llu \n", ticks_to_millisecs( gettime() ) );
+		
 		// read controller state
 
 		WPAD_ScanPads();
