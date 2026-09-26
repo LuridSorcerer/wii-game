@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 	p.velocity.x = 0.0f;
 	p.velocity.y = 0.0f;
 
-	float deltaTime = 0.016f; /* TODO: Placeholder */
+	float deltaTime = 0.016f;
 
 	// initialize devices
 	
@@ -38,13 +38,17 @@ int main(int argc, char **argv) {
 
 	WPAD_Init();
 
+	u64 lastTime = gettime();
+
 	// game loop
 
 	while(SYS_MainLoop()) {
 		
-		// TODO: update delta time
-		SYS_Report( "Time: %llu \n", ticks_to_millisecs( gettime() ) );
-		
+		// update delta time
+		u64 now = gettime();
+		deltaTime = (float)(now - lastTime) / (TB_TIMER_CLOCK * 1000); 
+		lastTime = now;
+
 		// read controller state
 
 		WPAD_ScanPads();
