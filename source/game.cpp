@@ -20,6 +20,9 @@ void Game::update() {
     // move player
     p.update(timer.getDeltaTime());
 
+    // check for collision
+    isColliding(p,b[0]);
+
     // keep player on screen
     clamp(&p.location.x, p.w/2, SCREEN_WIDTH  - (p.w/2));
     clamp(&p.location.y, p.h/2, SCREEN_HEIGHT - (p.h/2));
@@ -50,7 +53,7 @@ void Game::renderPlayer(Player* p) {
 		p->w,
 		p->h,
 		SOLID_WHITE,
-		false
+		isColliding(*p,b[0])
 	);
 }
 
@@ -95,4 +98,21 @@ void Game::updateControls(Player& p, float deltaTime) {
 
 		if (inputX == 0.0f) { applyFriction(p.velocity.x, FRICTION * deltaTime); }
 		if (inputY == 0.0f) { applyFriction(p.velocity.y, FRICTION * deltaTime); }
+}
+
+bool Game::isColliding(const Player& p, const Block& b) {
+    float pLeft   = p.location.x - (p.w/2.0f);
+    float pRight  = p.location.x + (p.w/2.0f);
+    float pTop    = p.location.y - (p.h/2.0f);
+    float pBottom = p.location.y + (p.h/2.0f);
+
+    float bLeft   = b.location.x - (b.w/2.0f);
+    float bRight  = b.location.x + (b.w/2.0f);
+    float bTop    = b.location.y - (b.h/2.0f);
+    float bBottom = b.location.y + (b.h/2.0f);
+
+    return pLeft   < bRight  &&
+           pRight  > bLeft   &&
+           pTop    < bBottom &&
+           pBottom > bTop;
 }

@@ -38,4 +38,5 @@ public:
     void renderBlock(Block*);
     void applyFriction(float&,float);
     void updateControls(Player&,float);
+    bool isColliding(const Player&, const Block&);
 };
