@@ -9,4 +9,11 @@ Player::Player() {
     h = 48;
 }
 
-void Player::update(float deltaTime) { }
+void Player::update(float deltaTime) {
+		// limit player speed
+		clamp(&velocity.x, -MAXSPEED, MAXSPEED);
+		clamp(&velocity.y, -MAXSPEED, MAXSPEED);
+
+		// move player
+	    location += (velocity * deltaTime);
+}

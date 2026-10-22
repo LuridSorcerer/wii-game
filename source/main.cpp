@@ -20,7 +20,6 @@ constexpr u32 SOLID_WHITE    = 0xFFFFFFFF;
 
 constexpr float ACCEL    = 500.0f;
 constexpr float FRICTION = 1000.0f;
-constexpr float MAXSPEED = 200.0f;
 
 static void drawPlayer(Player* p) {
 	float halfwidth  = p->w / 2;
@@ -41,6 +40,16 @@ static void drawPlayer(Player* p) {
 		SOLID_WHITE,
 		false
 	);
+}
+
+static void applyFriction(float& velocity, float frictionAmount) {
+	if (velocity > frictionAmount) {
+		velocity -= frictionAmount;
+	} else if (velocity < -frictionAmount) {
+		velocity += frictionAmount;
+	} else {
+		velocity = 0.0f;
+	}
 }
 
 //---------------------------------------------------------------------------------
@@ -80,13 +89,7 @@ int main(int argc, char **argv) {
 		} else {
 			// apply friction
 			float fric = FRICTION * timer.getDeltaTime();
-			if (p.velocity.x > fric) {
-				p.velocity.x -= fric;
-			} else if (p.velocity.x < -fric) {
-				p.velocity.x += fric;
-			} else {
-				p.velocity.x = 0;
-			}
+			applyFriction(p.velocity.x, fric);
 		}
 		
 		if (held & WPAD_BUTTON_DOWN) {
@@ -96,24 +99,13 @@ int main(int argc, char **argv) {
 		} else {
 			// apply friction
 			float fric = FRICTION * timer.getDeltaTime();
-			if (p.velocity.y > fric) {
-				p.velocity.y -= fric;
-			} else if (p.velocity.y < -fric) {
-				p.velocity.y += fric;
-			} else {
-				p.velocity.y = 0;
-			}
+			applyFriction(p.velocity.y, fric);
 		}
 
-		// limit player speed
-		
-		clamp(&p.velocity.x, -MAXSPEED, MAXSPEED);
-		clamp(&p.velocity.y, -MAXSPEED, MAXSPEED);
-
 		// move player
+		p.update(timer.getDeltaTime());
 
-		p.location += (p.velocity * timer.getDeltaTime());
-		
+		// keep player on screen
 		clamp(&p.location.x, 0, SCREEN_WIDTH);
 		clamp(&p.location.y, 0, SCREEN_HEIGHT);
 
