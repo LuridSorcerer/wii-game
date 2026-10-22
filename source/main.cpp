@@ -35,15 +35,11 @@ int main(int argc, char **argv) {
 //---------------------------------------------------------------------------------
 
 	// initialize variables
-
 	Timer timer;
-
 	Player p;
 
 	// initialize devices
-	
     GRRLIB_Init();
-
 	WPAD_Init();
 
 	// game loop
