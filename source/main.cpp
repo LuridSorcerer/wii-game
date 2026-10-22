@@ -6,6 +6,7 @@
 #include "vec2.h"
 #include "player.h"
 #include "timer.h"
+#include "utils.h"
 
 constexpr u32 SOLID_RED      = 0xFF0000FF;
 constexpr u32 SOLID_GREEN    = 0x00FF00FF;
@@ -14,10 +15,20 @@ constexpr u32 SOLID_BLACK    = 0x000000FF;
 constexpr u32 SOLID_DARKGRAY = 0x101010FF;
 constexpr u32 SOLID_WHITE    = 0xFFFFFFFF;
 
-/* TODO: Adjust these when making movement relative to delta time */
 constexpr float ACCEL    = 500.0f;
 constexpr float FRICTION = 1000.0f;
 constexpr float MAXSPEED = 200.0f;
+
+static void drawPlayer(Player* p) {
+	GRRLIB_Rectangle(
+		p->location.x,
+		p->location.y,
+		p->w,
+		p->h,
+		SOLID_WHITE,
+		true
+	);
+}
 
 //---------------------------------------------------------------------------------
 int main(int argc, char **argv) {
@@ -28,10 +39,6 @@ int main(int argc, char **argv) {
 	Timer timer;
 
 	Player p;
-	p.location.x = 100.0f;
-	p.location.y = 100.0f;
-	p.velocity.x = 0.0f;
-	p.velocity.y = 0.0f;
 
 	// initialize devices
 	
@@ -47,11 +54,8 @@ int main(int argc, char **argv) {
 		timer.update();
 
 		// read controller state
-
 		WPAD_ScanPads();
-
 		u32 pressed = WPAD_ButtonsDown(0);
-
 		u32 held = WPAD_ButtonsHeld(0);
 
 		// handle controls
@@ -94,28 +98,23 @@ int main(int argc, char **argv) {
 
 		// limit player speed
 		
-		if (p.velocity.x > MAXSPEED) { p.velocity.x = MAXSPEED; }
-		if (p.velocity.x < -MAXSPEED) { p.velocity.x = -MAXSPEED; }
-		if (p.velocity.y > MAXSPEED) { p.velocity.y = MAXSPEED; }
-		if (p.velocity.y < -MAXSPEED) { p.velocity.y = -MAXSPEED; }
+		clamp(&p.velocity.x, -MAXSPEED, MAXSPEED);
+		clamp(&p.velocity.y, -MAXSPEED, MAXSPEED);
 
 		// move player
 
 		p.location += (p.velocity * timer.getDeltaTime());
 		
+		clamp(&p.location.x, 0, 640-50);
+		clamp(&p.location.y, 0, 480-50);
+
 		// render
 		
 		GRRLIB_FillScreen(SOLID_DARKGRAY);
-		GRRLIB_Rectangle(
-			p.location.x,
-			p.location.y,
-			50,
-			50, 
-			SOLID_WHITE,
-			true
-		);
 
-        GRRLIB_Render();		
+		drawPlayer(&p);
+
+        GRRLIB_Render();
 
 	}
 	
