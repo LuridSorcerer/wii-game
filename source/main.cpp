@@ -5,6 +5,7 @@
 
 #include "vec2.h"
 #include "player.h"
+#include "timer.h"
 
 constexpr u32 SOLID_RED      = 0xFF0000FF;
 constexpr u32 SOLID_GREEN    = 0x00FF00FF;
@@ -24,13 +25,13 @@ int main(int argc, char **argv) {
 
 	// initialize variables
 
+	Timer timer;
+
 	Player p;
 	p.location.x = 100.0f;
 	p.location.y = 100.0f;
 	p.velocity.x = 0.0f;
 	p.velocity.y = 0.0f;
-
-	float deltaTime = 0.016f;
 
 	// initialize devices
 	
@@ -38,16 +39,12 @@ int main(int argc, char **argv) {
 
 	WPAD_Init();
 
-	u64 lastTime = gettime();
-
 	// game loop
 
 	while(SYS_MainLoop()) {
 		
 		// update delta time
-		u64 now = gettime();
-		deltaTime = (float)(now - lastTime) / (TB_TIMER_CLOCK * 1000); 
-		lastTime = now;
+		timer.update();
 
 		// read controller state
 
@@ -64,12 +61,12 @@ int main(int argc, char **argv) {
 		}
 
 		if (held & WPAD_BUTTON_RIGHT) {
-			p.velocity.x += ACCEL * deltaTime;
+			p.velocity.x += ACCEL * timer.getDeltaTime();
 		} else if (held & WPAD_BUTTON_LEFT) {
-			p.velocity.x -= ACCEL * deltaTime;
+			p.velocity.x -= ACCEL * timer.getDeltaTime();
 		} else {
 			// apply friction
-			float fric = FRICTION * deltaTime;
+			float fric = FRICTION * timer.getDeltaTime();
 			if (p.velocity.x > fric) {
 				p.velocity.x -= fric;
 			} else if (p.velocity.x < -fric) {
@@ -80,12 +77,12 @@ int main(int argc, char **argv) {
 		}
 		
 		if (held & WPAD_BUTTON_DOWN) {
-			p.velocity.y += ACCEL * deltaTime;
+			p.velocity.y += ACCEL * timer.getDeltaTime();
 		} else if (held & WPAD_BUTTON_UP) {
-			p.velocity.y -= ACCEL * deltaTime;
+			p.velocity.y -= ACCEL * timer.getDeltaTime();
 		} else {
 			// apply friction
-			float fric = FRICTION * deltaTime;
+			float fric = FRICTION * timer.getDeltaTime();
 			if (p.velocity.y > fric) {
 				p.velocity.y -= fric;
 			} else if (p.velocity.y < -fric) {
@@ -104,7 +101,7 @@ int main(int argc, char **argv) {
 
 		// move player
 
-		p.location += (p.velocity * deltaTime);
+		p.location += (p.velocity * timer.getDeltaTime());
 		
 		// render
 		
