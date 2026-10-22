@@ -6,6 +6,8 @@ void Game::init() {
     // initialize devices
     GRRLIB_Init();
 	WPAD_Init();
+
+    b.push_back( Block(200,400,300,10) );
 }
 
 void Game::update() {
@@ -27,6 +29,7 @@ void Game::render() {
     // render
     GRRLIB_FillScreen(SOLID_DARKGRAY);
     renderPlayer(&p);
+    renderBlock(&b[0]);
     GRRLIB_Render();
 }
 
@@ -49,6 +52,19 @@ void Game::renderPlayer(Player* p) {
 		SOLID_WHITE,
 		false
 	);
+}
+
+void Game::renderBlock(Block* b) {
+	float halfwidth  = b->w / 2;
+	float halfheight = b->h / 2;
+	GRRLIB_Rectangle(
+		b->location.x - halfwidth,
+		b->location.y - halfheight,
+		b->w,
+		b->h,
+		SOLID_RED,
+		true
+	);    
 }
 
 void Game::applyFriction(float& velocity, float frictionAmount) {

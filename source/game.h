@@ -2,11 +2,13 @@
 #include <wiiuse/wpad.h>
 #include <ogc/lwp_watchdog.h>
 #include <grrlib.h>
+#include <vector>
 
 #include "vec2.h"
 #include "player.h"
 #include "timer.h"
 #include "utils.h"
+#include "block.h"
 
 constexpr u32 SCREEN_WIDTH  = 640;
 constexpr u32 SCREEN_HEIGHT = 480;
@@ -26,12 +28,14 @@ class Game {
 public: 
 	Timer timer;
 	Player p;
+    std::vector<Block> b;
 
     Game();
     void init();
     void update();
     void render();
     void renderPlayer(Player*);
+    void renderBlock(Block*);
     void applyFriction(float&,float);
     void updateControls(Player&,float);
 };
