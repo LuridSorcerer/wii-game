@@ -6,17 +6,17 @@
 #include "vec2.h"
 #include "player.h"
 
-#define SOLID_RED      0xFF0000FF
-#define SOLID_GREEN    0x00FF00FF
-#define SOLID_BLUE     0x0000FFFF
-#define SOLID_BLACK    0x000000FF
-#define SOLID_DARKGRAY 0x101010FF
-#define SOLID_WHITE    0xFFFFFFFF
+constexpr u32 SOLID_RED      = 0xFF0000FF;
+constexpr u32 SOLID_GREEN    = 0x00FF00FF;
+constexpr u32 SOLID_BLUE     = 0x0000FFFF;
+constexpr u32 SOLID_BLACK    = 0x000000FF;
+constexpr u32 SOLID_DARKGRAY = 0x101010FF;
+constexpr u32 SOLID_WHITE    = 0xFFFFFFFF;
 
 /* TODO: Adjust these when making movement relative to delta time */
-#define ACCEL    500.0f
-#define FRICTION 1000.0f
-#define MAXSPEED 200.0f
+constexpr float ACCEL    = 500.0f;
+constexpr float FRICTION = 1000.0f;
+constexpr float MAXSPEED = 200.0f;
 
 //---------------------------------------------------------------------------------
 int main(int argc, char **argv) {
