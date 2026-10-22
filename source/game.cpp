@@ -116,3 +116,7 @@ bool Game::isColliding(const Player& p, const Block& b) {
            pTop    < bBottom &&
            pBottom > bTop;
 }
+
+void Game::resolveCollision(Player& p, const Block& b) {
+    
+}

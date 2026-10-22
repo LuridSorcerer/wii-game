@@ -39,4 +39,5 @@ public:
     void applyFriction(float&,float);
     void updateControls(Player&,float);
     bool isColliding(const Player&, const Block&);
+    void resolveCollision(Player&, const Block&);
 };
