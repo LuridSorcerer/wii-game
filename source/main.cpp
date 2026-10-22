@@ -8,6 +8,9 @@
 #include "timer.h"
 #include "utils.h"
 
+constexpr u32 SCREEN_WIDTH  = 640;
+constexpr u32 SCREEN_HEIGHT = 480;
+
 constexpr u32 SOLID_RED      = 0xFF0000FF;
 constexpr u32 SOLID_GREEN    = 0x00FF00FF;
 constexpr u32 SOLID_BLUE     = 0x0000FFFF;
@@ -20,13 +23,23 @@ constexpr float FRICTION = 1000.0f;
 constexpr float MAXSPEED = 200.0f;
 
 static void drawPlayer(Player* p) {
+	float halfwidth  = p->w / 2;
+	float halfheight = p->h / 2;
 	GRRLIB_Rectangle(
 		p->location.x,
 		p->location.y,
+		1,
+		1,
+		SOLID_WHITE,
+		true
+	);
+	GRRLIB_Rectangle(
+		p->location.x - halfwidth,
+		p->location.y - halfheight,
 		p->w,
 		p->h,
 		SOLID_WHITE,
-		true
+		false
 	);
 }
 
@@ -101,8 +114,8 @@ int main(int argc, char **argv) {
 
 		p.location += (p.velocity * timer.getDeltaTime());
 		
-		clamp(&p.location.x, 0, 640-50);
-		clamp(&p.location.y, 0, 480-50);
+		clamp(&p.location.x, 0, SCREEN_WIDTH);
+		clamp(&p.location.y, 0, SCREEN_HEIGHT);
 
 		// render
 		
