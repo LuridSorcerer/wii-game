@@ -21,7 +21,7 @@ constexpr u32 SOLID_WHITE    = 0xFFFFFFFF;
 constexpr float ACCEL    = 500.0f;
 constexpr float FRICTION = 1000.0f;
 
-static void drawPlayer(Player* p) {
+static void renderPlayer(Player* p) {
 	float halfwidth  = p->w / 2;
 	float halfheight = p->h / 2;
 	GRRLIB_Rectangle(
@@ -52,6 +52,26 @@ static void applyFriction(float& velocity, float frictionAmount) {
 	}
 }
 
+static void updateControls(Player& p, float deltaTime) {
+		WPAD_ScanPads();
+		u32 pressed = WPAD_ButtonsDown(0);
+		u32 held = WPAD_ButtonsHeld(0);
+
+		float inputX = 0.0f;
+		float inputY = 0.0f;
+
+		if (held & WPAD_BUTTON_LEFT ) { inputX -= 1.0f; }
+		if (held & WPAD_BUTTON_RIGHT) { inputX += 1.0f; }
+		if (held & WPAD_BUTTON_UP   ) { inputY -= 1.0f; }
+		if (held & WPAD_BUTTON_DOWN ) { inputY += 1.0f; }
+
+		p.velocity.x += inputX * ACCEL * deltaTime;
+		p.velocity.y += inputY * ACCEL * deltaTime;
+
+		if (inputX == 0.0f) { applyFriction(p.velocity.x, FRICTION * deltaTime); }
+		if (inputY == 0.0f) { applyFriction(p.velocity.y, FRICTION * deltaTime); }
+}
+
 //---------------------------------------------------------------------------------
 int main(int argc, char **argv) {
 //---------------------------------------------------------------------------------
@@ -72,51 +92,19 @@ int main(int argc, char **argv) {
 		timer.update();
 
 		// read controller state
-		WPAD_ScanPads();
-		u32 pressed = WPAD_ButtonsDown(0);
-		u32 held = WPAD_ButtonsHeld(0);
-
-		// handle controls
-		
-		if (pressed & WPAD_BUTTON_HOME) {
-			break; 
-		}
-
-		if (held & WPAD_BUTTON_RIGHT) {
-			p.velocity.x += ACCEL * timer.getDeltaTime();
-		} else if (held & WPAD_BUTTON_LEFT) {
-			p.velocity.x -= ACCEL * timer.getDeltaTime();
-		} else {
-			// apply friction
-			float fric = FRICTION * timer.getDeltaTime();
-			applyFriction(p.velocity.x, fric);
-		}
-		
-		if (held & WPAD_BUTTON_DOWN) {
-			p.velocity.y += ACCEL * timer.getDeltaTime();
-		} else if (held & WPAD_BUTTON_UP) {
-			p.velocity.y -= ACCEL * timer.getDeltaTime();
-		} else {
-			// apply friction
-			float fric = FRICTION * timer.getDeltaTime();
-			applyFriction(p.velocity.y, fric);
-		}
+		updateControls(p, timer.getDeltaTime());
 
 		// move player
 		p.update(timer.getDeltaTime());
 
 		// keep player on screen
-		clamp(&p.location.x, 0, SCREEN_WIDTH);
-		clamp(&p.location.y, 0, SCREEN_HEIGHT);
+		clamp(&p.location.x, p.w/2, SCREEN_WIDTH  - (p.w/2));
+		clamp(&p.location.y, p.h/2, SCREEN_HEIGHT - (p.h/2));
 
 		// render
-		
 		GRRLIB_FillScreen(SOLID_DARKGRAY);
-
-		drawPlayer(&p);
-
+		renderPlayer(&p);
         GRRLIB_Render();
-
 	}
 	
 	GRRLIB_Exit();
