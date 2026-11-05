@@ -3,6 +3,7 @@
 #include <ogc/lwp_watchdog.h>
 #include <grrlib.h>
 #include <vector>
+#include <cmath>
 
 #include "vec2.h"
 #include "player.h"
@@ -28,16 +29,16 @@ class Game {
 public: 
 	Timer timer;
 	Player p;
-    std::vector<Block> b;
+    std::vector<Block> blocks;
 
     Game();
     void init();
     void update();
     void render();
-    void renderPlayer(Player*);
-    void renderBlock(Block*);
+    void renderPlayer(const Player&);
+    void renderBlock(const Block&);
     void applyFriction(float&,float);
     void updateControls(Player&,float);
     bool isColliding(const Player&, const Block&);
-    void resolveCollision(Player&, const Block&);
+    void resolveCollision(Player&, Block&);
 };

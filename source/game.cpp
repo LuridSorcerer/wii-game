@@ -7,7 +7,8 @@ void Game::init() {
     GRRLIB_Init();
 	WPAD_Init();
 
-    b.push_back( Block(200,400,300,10) );
+    blocks.push_back( Block(200,400,300,10) );
+    blocks.push_back( Block(400,200,30,300) );
 }
 
 void Game::update() {
@@ -21,7 +22,11 @@ void Game::update() {
     p.update(timer.getDeltaTime());
 
     // check for collision
-    isColliding(p,b[0]);
+    for ( auto& b : blocks ) {
+		if ( isColliding(p,b) ) {
+			resolveCollision(p,b);
+		}
+	}
 
     // keep player on screen
     clamp(&p.location.x, p.w/2, SCREEN_WIDTH  - (p.w/2));
@@ -31,40 +36,34 @@ void Game::update() {
 void Game::render() {
     // render
     GRRLIB_FillScreen(SOLID_DARKGRAY);
-    renderPlayer(&p);
-    renderBlock(&b[0]);
+    renderPlayer(p);
+    for (const auto& b : blocks) {
+		renderBlock(b);
+	}
     GRRLIB_Render();
 }
 
-void Game::renderPlayer(Player* p) {
-	float halfwidth  = p->w / 2;
-	float halfheight = p->h / 2;
+void Game::renderPlayer(const Player& p) {
+	float halfwidth  = p.w / 2;
+	float halfheight = p.h / 2;
 	GRRLIB_Rectangle(
-		p->location.x,
-		p->location.y,
-		1,
-		1,
+		p.location.x - halfwidth,
+		p.location.y - halfheight,
+		p.w,
+		p.h,
 		SOLID_WHITE,
 		true
 	);
-	GRRLIB_Rectangle(
-		p->location.x - halfwidth,
-		p->location.y - halfheight,
-		p->w,
-		p->h,
-		SOLID_WHITE,
-		isColliding(*p,b[0])
-	);
 }
 
-void Game::renderBlock(Block* b) {
-	float halfwidth  = b->w / 2;
-	float halfheight = b->h / 2;
+void Game::renderBlock(const Block& b) {
+	float halfwidth  = b.w / 2;
+	float halfheight = b.h / 2;
 	GRRLIB_Rectangle(
-		b->location.x - halfwidth,
-		b->location.y - halfheight,
-		b->w,
-		b->h,
+		b.location.x - halfwidth,
+		b.location.y - halfheight,
+		b.w,
+		b.h,
 		SOLID_RED,
 		true
 	);    
@@ -117,6 +116,33 @@ bool Game::isColliding(const Player& p, const Block& b) {
            pBottom > bTop;
 }
 
-void Game::resolveCollision(Player& p, const Block& b) {
+void Game::resolveCollision(Player& p, Block& b) {
+    // store the x-axis and y-axis overlap amounts
+    float overlapX = 0.0f;
+    float overlapY = 0.0f;
     
+    // calculate x-axis overlap
+	if ( p.left() < b.left() ) {
+		overlapX = p.right() - b.left();
+	} else { 
+		overlapX = p.left() - b.right();
+	}
+	
+	// calculate y-axis overlap
+	if ( p.top() < b.top() ) {
+		overlapY = p.bottom() - b.top();
+	} else {
+		overlapY = p.top()  - b.bottom(); 
+	}
+
+	// move on the shorter intrusion axis
+	if ( abs(overlapX) < abs(overlapY) ) {
+		// SYS_Report("overlapX:%f \n",overlapX); 
+		p.location.x -= overlapX; 
+		p.velocity.x = 0;
+	} else {
+		// SYS_Report("overlapY:%f \n",overlapY); 
+		p.location.y -= overlapY;
+		p.velocity.y = 0;
+	}
 }

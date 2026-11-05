@@ -17,3 +17,11 @@ void Player::update(float deltaTime) {
 		// move player
 	    location += (velocity * deltaTime);
 }
+
+const float Player::left()   { return location.x - (w/2.0f); }
+
+const float Player::right()  { return location.x + (w/2.0f); }
+
+const float Player::top()    { return location.y - (h/2.0f); }
+
+const float Player::bottom() { return location.y + (h/2.0f); }

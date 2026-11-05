@@ -13,6 +13,11 @@ public:
 	
 	Player();
 	void update(float deltaTime);
+	
+	const float left();
+	const float right();
+	const float top();
+	const float bottom();
 };
 
 #endif

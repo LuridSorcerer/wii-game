@@ -8,3 +8,11 @@ Block::Block(float newX, float newY, float newW, float newH) {
     w = newW;
     h = newH;
 }
+
+const float Block::left()   { return location.x - (w/2.0f); }
+
+const float Block::right()  { return location.x + (w/2.0f); }
+
+const float Block::top()    { return location.y - (h/2.0f); }
+
+const float Block::bottom() { return location.y + (h/2.0f); }

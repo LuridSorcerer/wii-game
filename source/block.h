@@ -7,4 +7,9 @@ public:
 
     Block();
     Block(float x, float y, float w, float h);
+    
+	const float left();
+	const float right();
+	const float top();
+	const float bottom();
 };
