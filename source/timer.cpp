@@ -4,6 +4,7 @@
 #include <ogc/lwp_watchdog.h>
 
 Timer::Timer() {
+	deltaTime = 0.0f;
     currentTicks = lastTicks = gettime();
 }
 
