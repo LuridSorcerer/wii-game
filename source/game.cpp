@@ -100,23 +100,13 @@ void Game::updateControls(Player& p, float deltaTime) {
 }
 
 bool Game::isColliding(const Player& p, const Block& b) {
-    float pLeft   = p.location.x - (p.w/2.0f);
-    float pRight  = p.location.x + (p.w/2.0f);
-    float pTop    = p.location.y - (p.h/2.0f);
-    float pBottom = p.location.y + (p.h/2.0f);
-
-    float bLeft   = b.location.x - (b.w/2.0f);
-    float bRight  = b.location.x + (b.w/2.0f);
-    float bTop    = b.location.y - (b.h/2.0f);
-    float bBottom = b.location.y + (b.h/2.0f);
-
-    return pLeft   < bRight  &&
-           pRight  > bLeft   &&
-           pTop    < bBottom &&
-           pBottom > bTop;
+	return p.left()   < b.right()  &&
+		   p.right()  > b.left()   &&
+		   p.top()    < b.bottom() &&
+		   p.bottom() > b.top();
 }
 
-void Game::resolveCollision(Player& p, Block& b) {
+void Game::resolveCollision(Player& p, const Block& b) {
     // store the x-axis and y-axis overlap amounts
     float overlapX = 0.0f;
     float overlapY = 0.0f;

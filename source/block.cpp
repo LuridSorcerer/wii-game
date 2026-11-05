@@ -9,10 +9,10 @@ Block::Block(float newX, float newY, float newW, float newH) {
     h = newH;
 }
 
-const float Block::left()   { return location.x - (w/2.0f); }
+float Block::left()   const { return location.x - (w/2.0f); }
 
-const float Block::right()  { return location.x + (w/2.0f); }
+float Block::right()  const { return location.x + (w/2.0f); }
 
-const float Block::top()    { return location.y - (h/2.0f); }
+float Block::top()    const { return location.y - (h/2.0f); }
 
-const float Block::bottom() { return location.y + (h/2.0f); }
+float Block::bottom() const { return location.y + (h/2.0f); }
