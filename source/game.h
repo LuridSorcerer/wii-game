@@ -1,3 +1,6 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include <gccore.h>
 #include <wiiuse/wpad.h>
 #include <ogc/lwp_watchdog.h>
@@ -42,3 +45,5 @@ public:
     bool isColliding(const Player&, const Block&);
     void resolveCollision(Player&, const Block&);
 };
+
+#endif

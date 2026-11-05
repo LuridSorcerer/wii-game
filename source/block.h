@@ -1,3 +1,6 @@
+#ifndef BLOCK_H
+#define BLOCK_H
+
 #include "vec2.h"
 
 class Block {
@@ -13,3 +16,5 @@ public:
 	float top() const;
 	float bottom() const;
 };
+
+#endif
